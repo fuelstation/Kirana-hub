@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="utf-8"><title>Kirana Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#f4f6f4;--card:#fff;--tx:#14211a;--mu:#6b7a72;--pr:#0f7b4f;--pr2:#e4f4ec;--rd:#d93a3a;--or:#e8890c;--bd:#e3e8e5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1511;--card:#17211b;--tx:#eaf2ed;--mu:#8fa398;--pr:#3ecf8e;--pr2:#17332a;--bd:#25322b}}
+:root[data-theme="dark"]{--bg:#0e1511;--card:#17211b;--tx:#eaf2ed;--mu:#8fa398;--pr:#3ecf8e;--pr2:#17332a;--bd:#25322b}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Noto Sans Devanagari",Roboto,sans-serif;font-size:16px}
+#app{padding:16px 16px 90px;max-width:560px;margin:auto}
+.card{background:var(--card);border-radius:18px;padding:14px;margin:10px 0;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid .card{margin:0}.big{font-size:22px;font-weight:700}.mu{color:var(--mu);font-size:13px}
+h2{margin:6px 0}.hero{background:linear-gradient(135deg,var(--pr),#0a5a3a);color:#fff;border-radius:22px;padding:18px}
+.hero .mu{color:#d6efe3}
+button{font:inherit;border:0;border-radius:14px;padding:13px 16px;background:var(--pr);color:#fff;font-weight:600}
+button.s{background:var(--pr2);color:var(--pr)}button.d{background:var(--rd)}button.sm{padding:7px 12px;font-size:14px}
+input,select{font:inherit;width:100%;padding:12px;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);margin:4px 0}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.row:last-child{border:0}.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+nav div{flex:1;text-align:center;font-size:12px;padding:6px 0;color:var(--mu)}nav div b{display:block;font-size:20px}nav .on{color:var(--pr);font-weight:700}
+.bars{display:flex;align-items:flex-end;gap:8px;height:110px}.bars div{flex:1;background:var(--pr);border-radius:8px 8px 0 0;min-height:3px;transition:height .4s}
+.bars span{display:block;text-align:center;font-size:11px;color:var(--mu);margin-top:4px}
+.mod{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;z-index:9;padding-bottom:var(--kb,0px)}
+.mod>div{background:var(--card);width:100%;max-width:560px;margin:auto;border-radius:22px 22px 0 0;padding:18px;max-height:90%;overflow:auto}
+.low{color:var(--rd);font-weight:600}.pay button{flex:1}.pay{display:flex;gap:6px;margin:8px 0}
+#rcp{display:none}@media print{#app,nav,.mod{display:none!important}#rcp{display:block;font:12px monospace;width:var(--pw,48mm);white-space:pre-wrap;color:#000;background:#fff;margin:0}body{background:#fff}@page{margin:0}}
+</style><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0f7b4f"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"></head><body><div id="app"></div><pre id="rcp"></pre><nav id="nav"></nav>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const T={hi:{home:'होम',sales:'बिक्री',prod:'प्रोडक्ट',cust:'ग्राहक',more:'और',ts:'आज की बिक्री',tp:'आज का मुनाफा',due:'ग्राहक उधार',sv:'स्टॉक वैल्यू',add:'जोड़ें',name:'नाम',cost:'खरीद भाव ₹',price:'बिक्री भाव ₹',stock:'स्टॉक',min:'न्यूनतम स्टॉक',mob:'मोबाइल',cash:'कैश',upi:'UPI',credit:'उधार',save:'सेव करें',cancel:'रद्द',search:'प्रोडक्ट खोजें',total:'कुल',done:'बिल बनाएँ',cart:'कार्ट खाली है',walk:'सामान्य ग्राहक',collect:'वसूली',remind:'WhatsApp रिमाइंडर',attn:'ध्यान दें',lowc:'प्रोडक्ट कम स्टॉक में',week:'पिछले 7 दिन',bk:'बैकअप डाउनलोड',rs:'बैकअप रिस्टोर',lang:'Language: English',theme:'डार्क/लाइट मोड',shop:'दुकान का नाम',tag:'आपकी दुकान, अब स्मार्ट.',amt:'राशि ₹',none:'अभी कुछ नहीं है',restock:'स्टॉक जोड़ें',qty:'मात्रा',share:'WhatsApp पर बिल भेजें',hist:'हाल के बिल',paid:'दिया हुआ ₹',buy:'खरीद',sup:'सप्लायर',exp:'खर्चे',comp:'कंपनी',gst:'GST नंबर',inv:'बिल नंबर',payable:'देना बाकी',tpu:'आज की खरीद',tex:'आज का खर्च',net:'नेट मुनाफा',mex:'इस महीने का खर्च',note:'नोट',savep:'खरीद सेव करें',rent:'किराया',elec:'बिजली',sal:'वेतन',trn:'ट्रांसपोर्ट',pack:'पैकेजिंग',oth:'अन्य',need:'सप्लायर, प्रोडक्ट, मात्रा और भाव भरें',emp:'खाली = पूरा',pays:'भुगतान',split:'बाँटकर',ret:'रिटर्न'},
+en:{home:'Home',sales:'Sales',prod:'Products',cust:'Customers',more:'More',ts:"Today's Sales",tp:"Today's Profit",due:'Customer Due',sv:'Stock Value',add:'Add',name:'Name',cost:'Cost ₹',price:'Price ₹',stock:'Stock',min:'Min stock',mob:'Mobile',cash:'Cash',upi:'UPI',credit:'Credit',save:'Save',cancel:'Cancel',search:'Search product',total:'Total',done:'Generate bill',cart:'Cart is empty',walk:'Walk-in customer',collect:'Collect',remind:'WhatsApp reminder',attn:'Attention required',lowc:'products low in stock',week:'Last 7 days',bk:'Download backup',rs:'Restore backup',lang:'भाषा: हिंदी',theme:'Dark/Light mode',shop:'Shop name',tag:'Your shop, now smart.',amt:'Amount ₹',none:'Nothing yet',restock:'Add stock',qty:'Qty',share:'Send bill on WhatsApp',hist:"Recent bills",paid:'Paid ₹',buy:'Purchase',sup:'Suppliers',exp:'Expenses',comp:'Company',gst:'GST number',inv:'Invoice no.',payable:'Payable',tpu:"Today's Purchase",tex:"Today's Expense",net:'Net Profit',mex:'This month expense',note:'Note',savep:'Save purchase',rent:'Rent',elec:'Electricity',sal:'Salary',trn:'Transport',pack:'Packaging',oth:'Other',need:'Fill supplier, product, qty and rate',emp:'blank = full',pays:'Pay',split:'Split',ret:'Returns'}};
+let S;try{S=JSON.parse(localStorage.getItem('kh'))}catch(e){}
+S=S||{lang:'hi',shop:'Kirana Hub',p:[],c:[],s:[],n:1};S.sup=S.sup||[];S.pu=S.pu||[];S.ex=S.ex||[];S.sp=S.sp||[];S.rt=S.rt||[];S.cn=S.cn||[];if(S.xc>0){S.cn.push({id:'x0',ts:Date.now(),amt:S.xc,rem:S.xc,cust:'',bill:0});S.xc=0}S.p.forEach(p=>{if(!p.code)p.code=nextCode()});
+let tab='home',cart=[],q='',cust='',pay='cash',paidAmt='';
+const t=k=>T[S.lang][k],$=id=>document.getElementById(id);
+const save=()=>{try{localStorage.setItem('kh',JSON.stringify(S))}catch(e){}};
+const inr=n=>'₹'+Math.round(n*100)/100;
+const day=ts=>new Date(ts).toDateString();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function modal(title,fields,ok,del,free){const m=document.createElement('div');m.className='mod';
+m.innerHTML=`<div><h2>${title}</h2>${fields.map((f,i)=>`<label class="mu">${f[1]}</label>`+(f[3]?`<select id="f${i}">${f[3].map(o=>`<option value="${o[0]}" ${o[0]==f[2]?'selected':''}>${o[1]}</option>`).join('')}</select>`:`<input id="f${i}" ${f[2]||''}>`)).join('')}<div class="g2" style="margin-top:10px"><button class="s" id="mc">${t('cancel')}</button><button id="mo">${t('save')}</button></div>${del?`<button class="d" id="md" style="width:100%;margin-top:8px">🗑️ ${S.lang=='hi'?'हटाएँ':'Delete'}</button>`:''}</div>`;
+document.body.appendChild(m);$('mc').onclick=()=>m.remove();
+if(del)$('md').onclick=()=>{ask(S.lang=='hi'?'पक्का हटाना है?':'Delete this?',()=>{m.remove();askPin(del)})};
+$('mo').onclick=()=>{const v=fields.map((f,i)=>$('f'+i).value.trim());if(!v[0]&&!free){$('f0').style.borderColor='red';return}ok(v);m.remove();save();render()}}
+const num=v=>parseFloat(v)||0;
+function render(){if(!S.auth||!authed){authView();return}
+ const today=S.s.filter(x=>day(x.ts)==day(Date.now()));
+ const rcT=S.rt.filter(r=>r.k=='c'&&day(r.ts)==day(Date.now())),sales=today.reduce((a,x)=>a+x.total,0)-rcT.reduce((a,r)=>a+r.amt,0),prof=today.reduce((a,x)=>a+x.profit,0)-rcT.reduce((a,r)=>a+r.lp,0);
+ const tpu=S.pu.filter(x=>day(x.ts)==day(Date.now())).reduce((a,x)=>a+x.total,0),tex=S.ex.filter(x=>day(x.ts)==day(Date.now())).reduce((a,x)=>a+x.amt,0),mon=new Date().getMonth(),mex=S.ex.filter(x=>new Date(x.ts).getMonth()==mon).reduce((a,x)=>a+x.amt,0),pay_=S.sup.reduce((a,x)=>a+x.due,0);
+ const due=S.c.reduce((a,x)=>a+x.due,0),sv=S.p.reduce((a,x)=>a+x.cost*x.stock,0);
+ const low=S.p.filter(x=>x.stock<=x.min);let h='';
+ if(tab=='home'){
+  const days=[...Array(7)].map((_,i)=>{const d=new Date(Date.now()-(6-i)*864e5);return[d.toDateString(),['र','सो','मं','बु','गु','शु','श'][d.getDay()],d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})]});
+  const vals=days.map(d=>S.s.filter(x=>day(x.ts)==d[0]).reduce((a,x)=>a+x.total,0)-S.rt.filter(r=>r.k=='c'&&day(r.ts)==d[0]).reduce((a,r)=>a+r.amt,0)),mx=Math.max(...vals,1),dd=days[sd][0],dpf=S.s.filter(x=>day(x.ts)==dd).reduce((a,x)=>a+x.profit,0)-S.rt.filter(r=>r.k=='c'&&day(r.ts)==dd).reduce((a,r)=>a+r.lp,0),dex=S.ex.filter(x=>day(x.ts)==dd).reduce((a,x)=>a+x.amt,0),dpu=S.pu.filter(x=>day(x.ts)==dd).reduce((a,x)=>a+x.total,0),hi=S.lang=='hi';
+  h=`<div class="hero"><div>🙏 ${S.lang=='hi'?'नमस्ते':'Hello'}</div><div class="big">${esc(S.shop)}</div><div class="mu">${t('tag')}</div></div>
+  <div class="grid" style="margin-top:12px"><div class="card"><div class="mu">${t('ts')}</div><div class="big">${inr(sales)}</div></div><div class="card"><div class="mu">${t('tp')}</div><div class="big" style="color:var(--pr)">${inr(prof)}</div></div>
+  <div class="card"><div class="mu">${t('due')}</div><div class="big">${inr(due)}</div></div><div class="card"><div class="mu">${t('sv')}</div><div class="big">${inr(sv)}</div></div><div class="card"><div class="mu">${t('tpu')}</div><div class="big">${inr(tpu)}</div></div><div class="card"><div class="mu">${t('tex')}</div><div class="big">${inr(tex)}</div></div><div class="card"><div class="mu">${t('net')}</div><div class="big" style="color:var(--pr)">${inr(prof-tex)}</div></div><div class="card"><div class="mu">${t('payable')}</div><div class="big">${inr(pay_)}</div></div></div>
+  <div class="grid" style="margin-top:10px"><button onclick="go('sales')">🛒 ${t('sales')}</button><button class="s" onclick="addP()">➕ ${t('prod')}</button><button class="s" onclick="addC()">👤 ${t('cust')}</button><button class="s" onclick="go('cust')">💰 ${t('collect')}</button></div>
+  <div class="card"><b>${t('week')} — ${t('sales')} (₹)</b><div class="mu">${hi?'किसी भी दिन के बार पर दबाएँ':'Tap a bar for that day'}</div><div class="bars" style="margin-top:24px">${vals.map((v,i)=>`<div onclick="sd=${i};render()" style="height:${v/mx*100}%;position:relative;${i==sd?'':'opacity:.45'}"><em style="position:absolute;top:-16px;left:0;right:0;text-align:center;font:600 10px system-ui;font-style:normal;color:var(--tx)">${v?short(v):''}</em><span style="position:relative;top:100%">${days[i][1]}</span></div>`).join('')}</div><div style="height:22px"></div>
+  <div style="padding-top:6px;border-top:1px solid var(--bd)"><div class="mu">${days[sd][2]}${sd==6?' · '+(hi?'आज':'Today'):''}</div>
+  <div class="row"><span>🟩 ${t('sales')}</span><b>${inr(vals[sd])}</b></div>
+  <div class="row"><span>💚 ${hi?'मुनाफा':'Profit'}</span><b>${inr(dpf)}</b></div>
+  <div class="row"><span>🟥 ${t('exp')}</span><b>${inr(dex)}</b></div>
+  <div class="row"><span>🟦 ${t('buy')}</span><b>${inr(dpu)}</b></div>
+  <div class="row"><span>${t('net')}</span><b>${inr(dpf-dex)}</b></div></div></div>
+  <div class="card"><b>${t('attn')}</b>${low.length?`<div class="row"><span>🔴 ${low.length} ${t('lowc')}</span></div>`:''}${due?`<div class="row"><span>🟡 ${inr(due)} ${t('due')}</span></div>`:''}${pay_?`<div class="row"><span>🟣 ${inr(pay_)} ${t('payable')}</span></div>`:''}${!low.length&&!due&&!pay_?`<div class="mu">✅</div>`:''}</div>`;
+ }else if(tab=='sales'){
+  const ql=q.toLowerCase(),sc=x=>cn&&String(x.code)==cn?2:1,res=(q||cn)?S.p.filter(x=>(!cn||String(x.code).startsWith(cn))&&(!q||x.name.toLowerCase().includes(ql))).sort((a,b)=>sc(b)-sc(a)).slice(0,8):[];r0=res.length?res[0].id:'';
+  const tot=cart.reduce((a,x)=>a+lnet(x),0),rt=rnd(tot),sav=cart.reduce((a,x)=>a+(x.mrp>x.price?(x.mrp-x.price)*x.qty:0)+da(x),0);
+  h=`<h2>🛒 ${t('sales')}</h2><div style="display:flex;gap:6px"><input id="sn" inputmode="numeric" enterkeyhint="done" placeholder="#" value="${esc(cn)}" style="width:84px;flex:none;text-align:center" oninput="cn=this.value;lf='sn';rr()" onkeydown="if(event.key=='Enter'&&r0)addCart(r0)"><input id="sq" inputmode="text" enterkeyhint="done" placeholder="${S.lang=='hi'?'प्रोडक्ट का नाम खोजें':'Search product name'}" value="${esc(q)}" style="flex:1;min-width:0" oninput="q=this.value;lf='sq';rr()" onkeydown="if(event.key=='Enter'&&r0)addCart(r0)"></div>
+  ${res.map(x=>`<div class="row card" style="margin:4px 0;${x.id==r0?'outline:2px solid var(--pr)':''}" onclick="addCart('${x.id}')"><span style="display:flex;gap:10px;align-items:center">${th(x)}<span><b style="color:var(--pr)">#${x.code}</b> ${esc(x.name)}<br><span class="mu">${t('stock')}: ${x.stock}${x.unit&&x.unit!='pc'?' '+x.unit:''}</span></span></span><b>${inr(x.price)}</b></div>`).join('')}
+  
+  <div class="card">${cart.length?cart.map((x,i)=>`<div class="row"><span>${esc(x.name)}<br><span class="mu">${x.mrp>x.price?`<s>MRP ${inr(x.mrp)}</s> `:''}${inr(x.price)}${x.unit&&x.unit!='pc'?'/'+x.unit:''} = ${inr(lnet(x))}</span><br><button class="sm s" onclick="disc(${i})">🏷️ ${da(x)>0?'−'+inr(da(x)):(S.lang=='hi'?'छूट':'Discount')}</button></span><span><button class="sm s" onclick="qty(${i},-1)">−</button> <b onclick="setQty(${i})" style="border-bottom:2px dotted var(--pr)">${fq(x)}</b> <button class="sm s" onclick="qty(${i},1)">+</button></span></div>`).join('')+`${sav>0?`<div class="row" style="color:var(--pr)"><b>🎉 ${S.lang=='hi'?'ग्राहक की बचत':'You saved'}</b><b>${inr(sav)}</b></div>`:''}<div class="row"><b>${t('total')}</b>${xv()<=0&&S.cn.some(z=>z.rem>0)?`<button class="sm" onclick="pickCn()">↩️ ${S.lang=='hi'?'एक्सचेंज':'Exchange'} (${S.cn.filter(z=>z.rem>0).length})</button>`:''}<b class="big">${inr(rt)}</b></div>${xv()>0?`<div class="row" style="color:var(--pr)"><b>↩️ ${S.lang=='hi'?'रिटर्न क्रेडिट':'Return credit'}${cnN()} <button class="sm s" onclick="apCn='';render()">✕</button></b><b>−${inr(Math.min(xv(),rt))}</b></div><div class="row"><b>${S.lang=='hi'?'देना है':'To pay'}</b><b class="big">${inr(Math.max(0,rt-xv()))}</b></div>`:''}`:`<div class="mu">${t('cart')}</div>`}</div>
+  <select id="cs" onchange="cust=this.value;render()"><option value="">${t('walk')}</option>${S.c.map(c=>`<option value="${c.id}" ${cust==c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select>
+  <div class="pay">${['cash','upi','credit','split'].map(k=>`<button class="${pay==k?'':'s'}" onclick="pay='${k}';render()">${t(k)}</button>`).join('')}</div>
+  ${pay=='split'?`<div class="g2"><input type="number" inputmode="decimal" placeholder="${t('cash')} ₹" value="${esc(pcash)}" oninput="pcash=this.value;spl()"><input type="number" inputmode="decimal" placeholder="UPI ₹" value="${esc(pupi)}" oninput="pupi=this.value;spl()"></div><div class="row"><span>${t('credit')} (${S.lang=='hi'?'बाकी':'rest'})</span><b id="spl">${inr(Math.max(0,rt-Math.min(xv(),rt)-num(pcash)-num(pupi)))}</b></div>`:''}${pay=='credit'?`<input id="pa" type="number" inputmode="decimal" placeholder="${t('paid')}" value="${paidAmt}" oninput="paidAmt=this.value">`:''}
+  <button style="width:100%" onclick="bill()" ${cart.length?'':'disabled'}>${t('done')}</button>
+  
+  <h2 style="margin-top:18px">${t('hist')}</h2><div class="card">${S.s.length?S.s.slice(-20).reverse().map(x=>`<div class="row" onclick="showBill(${x.no})"><span>#${x.no} <span class="mu">${new Date(x.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'})} · ${t(x.pay)}</span></span><b>${inr(x.total)}</b></div>`).join(''):`<div class="mu">${t('none')}</div>`}</div>`;
+ }else if(tab=='prod'){
+  h=`<h2>📦 ${t('prod')}</h2><button style="width:100%" onclick="addP()">➕ ${t('add')}</button><input id="ps" placeholder="${S.lang=='hi'?'प्रोडक्ट खोजें (नाम या नंबर)':'Search products (name or code)'}" value="${esc(ps)}" style="margin-top:8px" oninput="ps=this.value;render();var e=$('ps');e.focus();e.setSelectionRange(e.value.length,e.value.length)"><div class="card">${pl().length?pl().map(x=>`<div class="row"><span style="display:flex;gap:10px;align-items:center"><span onclick="viewPic('${x.id}')">${th(x)}</span><span onclick="editP('${x.id}')">#${x.code} ${esc(x.name)}<br><span class="mu">${inr(x.cost)} → ${inr(x.price)}${x.unit&&x.unit!='pc'?'/'+x.unit:''}${x.mrp?' · MRP '+inr(x.mrp):''} ✏️</span>${lastSup(x)?`<br><span class="mu">🏭 ${esc(lastSup(x))}</span>`:''}</span></span><span style="text-align:right"><span class="${x.stock<=x.min?'low':''}">${x.stock}</span><br><button class="sm s" onclick="restock('${x.id}')">+${t('stock')}</button></span></div>`).join(''):`<div class="mu">${t('none')}</div>`}</div>`;
+ }else if(tab=='buy'){
+  h=`<h2>🧾 ${t('buy')}</h2><div class="card">
+  <select onchange="bp.s=this.value"><option value="">${t('sup')}</option>${S.sup.map(x=>`<option value="${x.id}" ${bp.s==x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select>
+  <div onclick="pickProd()" style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;border:1px solid var(--bd);margin:4px 0;cursor:pointer"><span>${bp.p&&S.p.find(x=>x.id==bp.p)?esc(S.p.find(x=>x.id==bp.p).name):t('prod')}</span><span class="mu">▾</span></div>
+  <label class="mu">${S.lang=='hi'?'खरीद की तारीख':'Purchase date'}</label><input type="date" value="${bp.d||todayStr()}" onchange="bp.d=this.value"><input placeholder="${t('inv')}" value="${esc(bp.i)}" oninput="bp.i=this.value">
+  <div class="g2"><input type="number" inputmode="decimal" placeholder="${t('qty')}" value="${esc(bp.q)}" oninput="bp.q=this.value;upd()"><input type="number" inputmode="decimal" placeholder="${t('cost')}" value="${esc(bp.c)}" oninput="bp.c=this.value;upd()"></div>
+  <div class="pay">${['cash','upi','dues','split'].map(k=>`<button class="${(bp.m||'cash')==k?'':'s'}" onclick="bp.m='${k}';render()">${k=='split'?t('split'):k=='dues'?(S.lang=='hi'?'उधार (Dues)':'Dues'):k=='upi'?'UPI':t('cash')}</button>`).join('')}</div>${bp.m=='dues'?'':bp.m=='split'?`<div class="g2"><input type="number" inputmode="decimal" placeholder="${t('cash')} ₹" value="${esc(bp.pc||'')}" oninput="bp.pc=this.value;bspl()"><input type="number" inputmode="decimal" placeholder="UPI ₹" value="${esc(bp.pu||'')}" oninput="bp.pu=this.value;bspl()"></div><div class="row"><span>${S.lang=='hi'?'उधार (बाकी)':'Dues (rest)'}</span><b id="bd">${inr(Math.max(0,num(bp.q)*num(bp.c)-num(bp.pc)-num(bp.pu)))}</b></div>`:`<input type="number" inputmode="decimal" placeholder="${t('paid')} (${t('emp')})" value="${esc(bp.a)}" oninput="bp.a=this.value">`}
+  <div class="row"><b>${t('total')}</b><b class="big" id="bt">${inr(num(bp.q)*num(bp.c))}</b></div>
+  <button style="width:100%" onclick="buySave()">${t('savep')}</button></div>
+  <div class="card">${S.pu.length?S.pu.slice(-20).reverse().map(x=>`<div class="row"><span>${esc(x.pn)} × ${x.q}${x.u&&x.u!='pc'?' '+x.u:''}<br><span class="mu">🏭 ${esc(x.sn)} · ${new Date(x.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})} ${esc(x.inv||'')}</span></span><b>${inr(x.total)}</b></div>`).join(''):`<div class="mu">${t('none')}</div>`}</div>`;
+ }else if(tab=='sup'){
+  h=`<h2>🏭 ${t('sup')}</h2><button style="width:100%" onclick="addS()">➕ ${t('add')}</button><div class="card">${S.sup.length?S.sup.map(x=>`<div class="row"><span onclick="editS('${x.id}')">${esc(x.name)}<br><span class="mu">${esc(x.comp||'')} ${esc(x.mob||'')} ✏️</span></span><span style="text-align:right"><b class="${x.due>0?'low':''}">${inr(x.due)}</b><br><button class="sm s" onclick="histS('${x.id}')">📜</button> ${x.due>0?`<button class="sm" onclick="paySup('${x.id}')">${t('pays')}</button>`:''}</span></div>`).join(''):`<div class="mu">${t('none')}</div>`}</div>`;
+ }else if(tab=='exp'){
+  const cats=['rent','elec','sal','trn','pack','oth'],ms=S.ex.filter(x=>new Date(x.ts).getMonth()==mon),mt=ms.reduce((a,x)=>a+x.amt,0)||1;
+  h=`<h2>💸 ${t('exp')}</h2><div class="grid"><div class="card"><div class="mu">${t('tex')}</div><div class="big">${inr(tex)}</div></div><div class="card"><div class="mu">${t('mex')}</div><div class="big">${inr(mex)}</div></div></div>
+  <div class="card"><div class="pay" style="flex-wrap:wrap">${cats.map(k=>`<button class="sm ${ec==k?'':'s'}" onclick="ec='${k}';render()">${t(k)}</button>`).join('')}</div>
+  <input id="xa" type="number" inputmode="decimal" placeholder="${t('amt')}"><input id="xn" placeholder="${t('note')}"><button style="width:100%" onclick="addX()">${t('add')}</button></div>
+  <div class="card">${cats.map(k=>{const v=ms.filter(x=>x.cat==k).reduce((a,x)=>a+x.amt,0);return v?`<div class="row"><span>${t(k)}</span><span><b>${inr(v)}</b> <span class="mu">${Math.round(v/mt*100)}%</span></span></div>`:''}).join('')||`<div class="mu">${t('none')}</div>`}</div>
+  <div class="card">${S.ex.slice(-20).reverse().map(x=>`<div class="row" onclick="editX(${x.ts})"><span>${t(x.cat)} <span class="mu">${esc(x.note||'')} ✏️</span></span><b>${inr(x.amt)}</b></div>`).join('')}</div>`;
+ }else if(tab=='ret'){
+  const hi=S.lang=='hi';
+  h=`<h2>↩️ ${t('ret')}</h2><div class="grid"><button onclick="retPick()">👤 ${hi?'ग्राहक रिटर्न':'Customer return'}</button><button class="s" onclick="retSup()">🏭 ${hi?'सप्लायर रिटर्न':'Supplier return'}</button></div>
+  ${S.cn.some(z=>z.rem>0)?`<div class="card"><b>↩️ ${hi?'बाकी रिटर्न क्रेडिट':'Pending return credits'}</b>${S.cn.filter(z=>z.rem>0).map(z=>`<div class="row"><span>${esc(z.cust||(hi?'ग्राहक नहीं':'No customer'))}<br><span class="mu">${new Date(z.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}${z.bill?' · #'+z.bill:''}</span></span><b>${inr(z.rem)}</b></div>`).join('')}</div>`:''}
+  <div class="card">${S.rt.length?S.rt.slice(-20).reverse().map(r=>`<div class="row"><span>${r.k=='c'?'👤 '+esc(r.cust||(hi?'ग्राहक':'Customer'))+' · #'+r.no:'🏭 '+esc(r.sn)}<br><span class="mu">${r.items.map(i=>esc(i.n)+' ×'+i.q).join(', ')} · ${new Date(r.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'})} · ${modeL(r.mode)}</span></span><b>−${inr(r.amt)}</b></div>`).join(''):`<div class="mu">${t('none')}</div>`}</div>`;
+ }else if(tab=='cust'){
+  h=`<h2>👥 ${t('cust')}</h2><button style="width:100%" onclick="addC()">➕ ${t('add')}</button><div class="card">${S.c.length?S.c.map(x=>`<div class="row"><span onclick="editC('${x.id}')">${esc(x.name)}<br><span class="mu">${esc(x.mob)} ✏️</span>${x.addr?'<br><span class="mu">📍 '+esc(x.addr)+'</span>':''}</span><span style="text-align:right"><b class="${x.due>0?'low':''}">${inr(x.due)}</b><br>${x.due>0?`<button class="sm" onclick="collect('${x.id}')">${t('collect')}</button> <button class="sm s" onclick="remind('${x.id}')">💬</button>`:''}</span></div>`).join(''):`<div class="mu">${t('none')}</div>`}</div>`;
+ }else{
+  h=`<h2>☰ ${t('more')}</h2><div class="grid" style="margin-bottom:10px"><button onclick="go('buy')">🧾 ${t('buy')}</button><button onclick="go('sup')">🏭 ${t('sup')}</button><button onclick="go('exp')">💸 ${t('exp')}</button><button onclick="go('ret')">↩️ ${t('ret')}</button></div><div class="card"><label class="mu">${t('shop')}</label><input value="${esc(S.shop)}" onchange="S.shop=this.value;save()"><label class="mu">${S.lang=='hi'?'आपकी UPI ID (QR कोड के लिए)':'Your UPI ID (for QR)'}</label>${S.upi?`<div class="row"><b>${esc(S.upi)}</b><span><button class="sm s" onclick="askPin(()=>setUpi())">✏️</button> <button class="sm d" onclick="ask(S.lang=='hi'?'UPI ID हटानी है?':'Remove UPI ID?',()=>askPin(()=>{S.upi=''}))">🗑️</button></span></div>`:`<input placeholder="name@bank" onchange="S.upi=this.value.trim();save();render()">`}</div>
+  <button class="s" style="width:100%;margin:5px 0" onclick="S.lang=S.lang=='hi'?'en':'hi';save();render()">${t('lang')}</button>
+  <button class="s" style="width:100%;margin:5px 0" onclick="var r=document.documentElement;r.dataset.theme=r.dataset.theme=='dark'?'light':'dark'">🌓 ${t('theme')}</button>
+  <div class="card"><div class="mu">📱 ${S.auth?S.auth.mob:''}</div><div class="g2" style="margin-top:8px"><button class="s" onclick="chgLogin()">🔑 ${S.lang=='hi'?'लॉगिन PIN बदलें':'Change login PIN'}</button><button class="d" onclick="logout()">🚪 ${S.lang=='hi'?'लॉग आउट':'Log out'}</button></div></div>
+  <button class="s" style="width:100%;margin:5px 0" onclick="changePin()">🔐 ${S.lang=='hi'?'हटाने का PIN '+(S.pin?'बदलें':'बनाएँ'):(S.pin?'Change':'Set')+' delete PIN'}</button>
+  <button class="s" style="width:100%;margin:5px 0" onclick="S.ro=!S.ro;save();render()">🔢 ${S.lang=='hi'?'पूरे रुपये में राउंड-ऑफ':'Round off to whole ₹'}: ${S.ro?'ON':'OFF'}</button>
+  <button class="s" style="width:100%;margin:5px 0" onclick="S.pw=S.pw==80?58:80;save();render()">🖨️ Printer: ${S.pw==80?80:58}mm</button>
+  <button class="s" style="width:100%;margin:5px 0" onclick="backup()">💾 ${t('bk')}</button>
+  <button class="s" style="width:100%;margin:5px 0" onclick="$('rf').click()">♻️ ${t('rs')}</button><input id="rf" type="file" accept=".json" hidden onchange="restore(this)">`;
+ }
+ $('app').innerHTML=h;
+ $('nav').innerHTML=[['home','🏠'],['sales','🛒'],['prod','📦'],['cust','👥'],['more','☰']].map(x=>`<div class="${tab==x[0]||(x[0]=='more'&&['buy','sup','exp','ret'].includes(tab))?'on':''}" onclick="go('${x[0]}')"><b>${x[1]}</b>${t(x[0])}</div>`).join('');
+}
+function go(x){tab=x;render()}
+const xv=()=>{const n=S.cn.find(z=>z.id==apCn);return n?n.rem:0},cnN=()=>{const n=S.cn.find(z=>z.id==apCn);return n&&n.cust?' · '+esc(n.cust):''};
+function pickCn(){const hi=S.lang=='hi',cc=(S.c.find(x=>x.id==cust)||{}).name||'',L=S.cn.filter(z=>z.rem>0).sort((a,b)=>(b.cust==cc)-(a.cust==cc)||b.ts-a.ts),m=document.createElement('div');m.className='mod';
+ m.innerHTML=`<div style="max-height:85%;overflow:auto"><h2>↩️ ${hi?'किस ग्राहक का एक्सचेंज?':'Whose exchange credit?'}</h2>${L.map(z=>`<div class="row" style="padding:14px 4px"><span data-id="${z.id}" style="flex:1">${esc(z.cust||(hi?'ग्राहक नहीं':'No customer'))}<br><span class="mu">${new Date(z.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}${z.bill?' · #'+z.bill:''}</span></span><b data-id="${z.id}">${inr(z.rem)}</b> <button class="sm d" data-del="${z.id}">🗑️</button></div>`).join('')}<button class="s" id="cc" style="width:100%;margin-top:10px">${t('cancel')}</button></div>`;
+ document.body.appendChild(m);$('cc').onclick=()=>m.remove();
+ m.onclick=e=>{const d=e.target.closest('[data-del]');if(d){m.remove();ask(hi?'यह क्रेडिट हटाना है?':'Delete this credit?',()=>askPin(()=>{const n=S.cn.find(z=>z.id==d.dataset.del);if(n)n.rem=0;if(apCn==d.dataset.del)apCn=''}));return}const r=e.target.closest('[data-id]');if(r){apCn=r.dataset.id;m.remove();render()}}}
+
+function modeL(m){const hi=S.lang=='hi';return m=='upi'?'UPI':m=='xc'?(hi?'एक्सचेंज':'Exchange'):m=='due'?(hi?'उधार घटाया':'Adjusted in dues'):t('cash')}
+function retPick(){const hi=S.lang=='hi',m=document.createElement('div');m.className='mod';
+ m.innerHTML=`<div style="max-height:85%;overflow:auto"><h2>${hi?'कौन सा बिल?':'Which bill?'}</h2>${S.s.length?S.s.slice(-30).reverse().map(x=>`<div class="row" data-no="${x.no}" style="padding:14px 4px"><span>#${x.no} ${esc(x.cust||'')}<br><span class="mu">${new Date(x.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'})} · ${esc(x.items.map(i=>i.n).join(', ').slice(0,40))}</span></span><b>${inr(x.total)}</b></div>`).join(''):`<div class="mu">${t('none')}</div>`}<button class="s" id="rc" style="width:100%;margin-top:10px">${t('cancel')}</button></div>`;
+ document.body.appendChild(m);$('rc').onclick=()=>m.remove();m.onclick=e=>{const r=e.target.closest('[data-no]');if(r){m.remove();retBill(+r.dataset.no)}}}
+function retBill(no){const x=S.s.find(y=>y.no==no),hi=S.lang=='hi',f=[],n=x.items.length;
+ x.items.forEach((i,k)=>f.push([k,i.n+' ('+(hi?'अधिकतम ':'max ')+Math.round((i.q-(i.rq||0))*1000)/1000+')',N+'placeholder="0"']));
+ f.push([n,hi?'रिफंड कैसे':'Refund as','cash',[['cash',t('cash')],['upi','UPI'],['due',hi?'ग्राहक के उधार में घटाएँ':'Reduce customer dues'],['xc',hi?'नए सामान के बदले (एक्सचेंज)':'Exchange for new items']]]);
+ modal('↩️ #'+no,f,v=>{const mode=v[n],c=custOf(x),its=[];let amt=0,lp=0;
+  for(let k=0;k<n;k++){const i=x.items[k],q=num(v[k]);if(q<=0)continue;const mx=Math.round((i.q-(i.rq||0))*1000)/1000;
+   if(q>mx+1e-9){toast(hi?'बिल से ज़्यादा वापस नहीं हो सकता':'Cannot return more than billed');return}
+   const a=Math.round((i.p*q-(i.d||0)*q/i.q)*100)/100,cost=costOf(i);its.push({n:i.n,q,a,cost,k});amt+=a;lp+=a-cost*q}
+  if(!its.length)return;
+  if(mode=='due'&&!c){toast(hi?'इस बिल में ग्राहक नहीं है':'This bill has no customer');return}
+  its.forEach(z=>{const i=x.items[z.k],p=prodOf(i);i.rq=Math.round(((i.rq||0)+z.q)*1000)/1000;if(p)p.stock=Math.round((p.stock+z.q)*1000)/1000});
+  if(mode=='due')c.due=Math.max(0,Math.round((c.due-amt)*100)/100);
+  if(mode=='xc'){const nn={id:'x'+Date.now(),ts:Date.now(),amt:Math.round(amt*100)/100,rem:Math.round(amt*100)/100,cust:x.cust||'',bill:no};S.cn.push(nn);tab='sales'}
+  S.rt.push({id:'r'+Date.now(),ts:Date.now(),k:'c',no,cust:x.cust,items:its.map(z=>({n:z.n,q:z.q})),amt:Math.round(amt*100)/100,lp:Math.round(lp*100)/100,mode});
+  toast((hi?'रिटर्न हो गया ₹':'Return done ₹')+Math.round(amt*100)/100)},null,true)}
+function retSup(){const hi=S.lang=='hi';
+ if(!S.sup.length||!S.p.length){toast(hi?'पहले सप्लायर और प्रोडक्ट जोड़ें':'Add suppliers and products first');return}
+ modal('↩️ '+t('sup'),[[0,t('sup'),'',S.sup.map(x=>[x.id,esc(x.name)])],[1,t('prod'),'',S.p.map(x=>[x.id,'#'+x.code+' '+esc(x.name)])],[2,t('qty'),N],[3,hi?'वापसी भाव ₹ (खाली = प्रोडक्ट का भाव)':'Return rate ₹ (blank = product cost)',N],[4,hi?'पैसा कैसे मिला':'Refund as','due',[['due',hi?'सप्लायर के देना बाकी में घटाएँ':'Reduce supplier payable'],['cash',t('cash')],['upi','UPI']]]],v=>{
+  const s0=S.sup.find(x=>x.id==v[0]),p=S.p.find(x=>x.id==v[1]),q=num(v[2]);
+  if(!s0||!p||q<=0){toast(t('need'));return}
+  if(q>p.stock+1e-9){toast(hi?'स्टॉक से ज़्यादा वापस नहीं कर सकते':'Cannot return more than stock');return}
+  const amt=Math.round(q*(num(v[3])||p.cost)*100)/100;p.stock=Math.round((p.stock-q)*1000)/1000;
+  if(v[4]=='due')s0.due=Math.max(0,Math.round((s0.due-amt)*100)/100);
+  S.rt.push({id:'r'+Date.now(),ts:Date.now(),k:'s',sid:s0.id,sn:s0.name,items:[{n:p.name,q}],amt,mode:v[4]});
+  toast((hi?'सप्लायर रिटर्न हो गया ₹':'Supplier return done ₹')+amt)})}
+
+let bp={s:'',p:'',q:'',c:'',i:'',a:''},ec='rent';
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function pickProd(){const hi=S.lang=='hi',m=document.createElement('div');m.className='mod';
+ m.innerHTML=`<div style="max-height:85%;display:flex;flex-direction:column"><div style="display:flex;gap:8px;align-items:center"><h2 style="margin:0;white-space:nowrap">${t('prod')}</h2><input id="pq" placeholder="🔍 ${hi?'खोजें (नाम/नंबर)':'Search'}" style="margin:0"><button class="s sm" id="px">✕</button></div><div id="pl" style="overflow:auto;margin-top:8px"></div></div>`;
+ document.body.appendChild(m);
+ const draw=()=>{const k=$('pq').value.trim().toLowerCase();$('pl').innerHTML=S.p.filter(x=>!k||String(x.code)==k||String(x.code).startsWith(k)||x.name.toLowerCase().includes(k)).slice(0,100).map(x=>'<div class="row" data-id="'+x.id+'" style="padding:14px 4px"><span>#'+x.code+' '+esc(x.name)+'</span>'+(bp.p==x.id?'<b>✓</b>':'')+'</div>').join('')||'<div class="mu">'+t('none')+'</div>'};
+ draw();$('pq').oninput=draw;$('px').onclick=()=>m.remove();
+ $('pl').onclick=e=>{const r=e.target.closest('[data-id]');if(!r)return;const pr=S.p.find(x=>x.id==r.dataset.id);bp.p=pr.id;bp.c=pr.cost;m.remove();render()};
+ setTimeout(()=>$('pq').focus(),60)}
+function upd(){$('bt').textContent=inr(num(bp.q)*num(bp.c));bspl()}
+function bspl(){const e=$('bd');if(e)e.textContent=inr(Math.max(0,num(bp.q)*num(bp.c)-num(bp.pc)-num(bp.pu)))}
+function addS(){modal(t('sup'),[[0,t('name')],[1,t('comp')],[2,t('mob'),'type=tel inputmode=numeric'],[3,t('gst')]],v=>S.sup.push({id:'s'+Date.now(),name:v[0],comp:v[1],mob:v[2],gst:v[3],due:0}))}
+function paySup(id){const s=S.sup.find(x=>x.id==id),hi=S.lang=='hi';
+ modal(t('pays')+' - '+s.name+' ('+inr(s.due)+')',[[0,t('cash')+' ₹',N],[1,'UPI ₹',N],[2,t('note')]],v=>{const ca=num(v[0]),up=num(v[1]);
+  if(ca+up<=0)return;
+  if(ca+up>s.due+0.001){toast(hi?'भुगतान बाकी रकम से ज़्यादा है':'Payment is more than the due');return}
+  const ts=Date.now();if(ca>0)S.sp.push({ts,sid:id,amt:ca,mode:'cash',note:v[2]});if(up>0)S.sp.push({ts,sid:id,amt:up,mode:'upi',note:v[2]});
+  s.due=Math.round((s.due-ca-up)*100)/100},null,true);setTimeout(()=>{const e=$('f0');if(e)e.focus()},60)}
+function addX(){const a=num($('xa').value);if(a<=0){$('xa').style.borderColor='red';return}S.ex.push({ts:Date.now(),cat:ec,amt:a,note:$('xn').value.trim()});save();render()}
+function buySave(){const s=S.sup.find(x=>x.id==bp.s),p=S.p.find(x=>x.id==bp.p),q=num(bp.q),c=num(bp.c);
+ if(!s||!p||q<=0||c<=0){toast(t('need'));return}
+ const total=q*c,m0=bp.m||'cash';let ca=0,up=0;
+ if(m0=='cash')ca=bp.a===''?total:Math.min(total,num(bp.a));else if(m0=='upi')up=bp.a===''?total:Math.min(total,num(bp.a));else if(m0=='split'){ca=num(bp.pc);up=num(bp.pu);if(ca+up>total){toast(S.lang=='hi'?'कैश + UPI कुल से ज़्यादा है':'Cash + UPI is more than total');return}}
+ const paid=ca+up;
+ const os=Math.max(0,p.stock);p.cost=Math.round(((os*p.cost+q*c)/(os+q))*100)/100;p.stock+=q;s.due=Math.round((s.due+total-paid)*100)/100;
+ S.pu.push({id:'u'+Date.now(),ts:bp.d?new Date(bp.d+'T12:00:00').getTime():Date.now(),sid:s.id,sn:s.name,pid:p.id,u:p.unit||'pc',pn:p.name,q,c,total,paid,mode:m0,pays:{cash:ca,upi:up},inv:bp.i});
+ bp={s:'',p:'',q:'',c:'',i:'',a:''};save();render();toast((S.lang=='hi'?'स्टॉक जुड़ गया। नया औसत भाव ₹':'Stock added. New average cost ₹')+p.cost)}
+function pic(f,cb){const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const sz=m=>{const k=Math.min(1,m/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);const x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(i,0,0,c.width,c.height);return c};cb(sz(300).toDataURL('image/jpeg',.85),sz(1200).toDataURL('image/jpeg',.92))};i.src=r.result};r.readAsDataURL(f)}
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('kh-img',1);r.onupgradeneeded=()=>r.result.createObjectStore('i');r.onsuccess=()=>res(r.result);r.onerror=()=>rej()})}
+async function idbPut(k,v){try{const d=await idb();d.transaction('i','readwrite').objectStore('i').put(v,k)}catch(e){}}
+async function idbGet(k){try{const d=await idb();return await new Promise(r=>{const q=d.transaction('i').objectStore('i').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)})}catch(e){return null}}
+async function viewPic(id){const p=S.p.find(x=>x.id==id);if(!p.img){chgPic(id);return}
+ const full=(await idbGet(id))||p.img,hi=S.lang=='hi',m=document.createElement('div');m.className='mod';m.style.alignItems='center';
+ m.innerHTML=`<div style="border-radius:22px;text-align:center"><img src="${full}" style="max-width:100%;max-height:60vh;border-radius:14px"><h2>${esc(p.name)}</h2><div class="g2"><button class="s" id="vc">OK</button><button id="vch">📷 ${hi?'फोटो बदलें':'Change photo'}</button></div></div>`;
+ document.body.appendChild(m);$('vc').onclick=()=>m.remove();$('vch').onclick=()=>{m.remove();chgPic(id)}}
+function th(x){return x.img?`<img src="${x.img}" style="width:88px;height:88px;border-radius:16px;object-fit:cover">`:`<span style="width:88px;height:88px;border-radius:16px;background:var(--pr2);display:inline-flex;align-items:center;justify-content:center;font-size:36px">📷</span>`}
+function chgPic(id){const o=S.p.find(x=>x.id==id),i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=()=>{if(i.files[0])pic(i.files[0],(d,fu)=>{o.img=d;idbPut(o.id,fu);save();render()})};i.click()}
+function addP(){modal(t('prod'),[[0,t('name')],[1,t('cost'),N],[2,t('price'),N],[3,'MRP ₹ (प्रिंट रेट)',N],[4,t('stock'),N],[5,t('min'),N],[6,S.lang=='hi'?'फोटो':'Photo','type=file accept=image/*'],[7,S.lang=='hi'?'इकाई (Unit)':'Unit','pc',[['pc','नग / Piece'],['kg','किलो / Kg (भाव प्रति kg)'],['ltr','लीटर / Litre (भाव प्रति L)']]],[8,'कोड नंबर (Code)',N+nv(0,nextCode())]],v=>{const f=$('f6').files[0],cd=(v[8]&&!S.p.some(o=>String(o.code)==v[8]))?v[8]:nextCode(),o={code:cd,id:'p'+Date.now(),name:v[0],cost:num(v[1]),price:num(v[2]),mrp:num(v[3]),stock:num(v[4]),min:num(v[5])||5,img:'',unit:v[7]};S.p.push(o);if(f)pic(f,(d,fu)=>{o.img=d;idbPut(o.id,fu);save();render()})})}
+const nv=(k,v)=>'value="'+esc(v)+'"',N='type=number inputmode=decimal ';
+function editX(ts){const x=S.ex.find(e=>e.ts==ts),cats=['rent','elec','sal','trn','pack','oth'];
+ modal(t('exp'),[[0,t('amt'),N+nv(0,x.amt)],[1,t('note'),nv(0,x.note||'')],[2,t('exp'),x.cat,cats.map(k=>[k,t(k)])]],v=>{x.amt=num(v[0]);x.note=v[1];x.cat=v[2]},()=>{S.ex=S.ex.filter(e=>e.ts!=ts)})}
+function editP(id){const x=S.p.find(e=>e.id==id);
+ modal(t('prod'),[[0,t('name'),nv(0,x.name)],[1,t('cost'),N+nv(0,x.cost)],[2,t('price'),N+nv(0,x.price)],[3,'MRP ₹ (प्रिंट रेट)',N+nv(0,x.mrp||'')],[4,t('stock'),N+nv(0,x.stock)],[5,t('min'),N+nv(0,x.min)],[6,S.lang=='hi'?'इकाई (Unit)':'Unit',x.unit||'pc',[['pc','नग / Piece'],['kg','किलो / Kg (भाव प्रति kg)'],['ltr','लीटर / Litre (भाव प्रति L)']]],[7,'कोड नंबर (Code)',N+nv(0,x.code||'')]],v=>{if(v[7]&&!S.p.some(o=>o!==x&&String(o.code)==v[7]))x.code=v[7];x.name=v[0];x.cost=num(v[1]);x.price=num(v[2]);x.mrp=num(v[3]);x.stock=num(v[4]);x.min=num(v[5]);x.unit=v[6]},()=>{S.p=S.p.filter(e=>e.id!=id)})}
+function editC(id){const x=S.c.find(e=>e.id==id);
+ modal(t('cust'),[[0,t('name'),nv(0,x.name)],[1,t('mob'),'type=tel '+nv(0,x.mob)],[2,(S.lang=='hi'?'पता':'Address'),nv(0,x.addr||'')]],v=>{x.name=v[0];x.mob=v[1];x.addr=v[2]},()=>{S.c=S.c.filter(e=>e.id!=id)})}
+function editS(id){const x=S.sup.find(e=>e.id==id);
+ modal(t('sup'),[[0,t('name'),nv(0,x.name)],[1,t('comp'),nv(0,x.comp||'')],[2,t('mob'),'type=tel '+nv(0,x.mob||'')],[3,t('gst'),nv(0,x.gst||'')]],v=>{x.name=v[0];x.comp=v[1];x.mob=v[2];x.gst=v[3]},()=>{S.sup=S.sup.filter(e=>e.id!=id)})}
+function addC(){modal(t('cust'),[[0,t('name')],[1,t('mob'),'type=tel inputmode=numeric'],[2,(S.lang=='hi'?'पता':'Address')]],v=>S.c.push({id:'c'+Date.now(),name:v[0],mob:v[1],addr:v[2],due:0}))}
+function restock(id){const p=S.p.find(x=>x.id==id);bp={s:'',p:id,q:'',c:p.cost,i:'',a:''};tab='buy';render();if(!S.sup.length)toast(S.lang=='hi'?'पहले सप्लायर जोड़ें (More → सप्लायर)':'Add a supplier first (More → Suppliers)')}
+function collect(id){const c=S.c.find(x=>x.id==id);modal(t('collect')+' - '+c.name,[[0,t('amt'),'type=number inputmode=decimal']],v=>{c.due=Math.max(0,c.due-num(v[0]))})}
+function remind(id){const c=S.c.find(x=>x.id==id);const m=S.lang=='hi'?`नमस्ते ${c.name}, ${S.shop} में आपका ${inr(c.due)} बकाया है। कृपया भुगतान करें। धन्यवाद 🙏`:`Hello ${c.name}, you have a due of ${inr(c.due)} at ${S.shop}. Thank you 🙏`;
+ window.open('https://wa.me/'+(c.mob.replace(/\D/g,'').length==10?'91':'')+c.mob.replace(/\D/g,'')+'?text='+encodeURIComponent(m))}
+let kb='text',r0='',cn='',lf='sq',authed=!!(S&&S.auth&&S.stay),am='login',pl_=4,av={};
+let pcash='',pupi='',sd=6,ps='',apCn='';
+function pl(){const k=ps.trim().toLowerCase();return(k?S.p.filter(x=>String(x.code)==k||String(x.code).startsWith(k)||x.name.toLowerCase().includes(k)):S.p).slice(0,100)}const short=v=>v>=1000?(Math.round(v/100)/10)+'k':Math.round(v);
+function spl(){const el=$('spl');if(el){const t0=cart.reduce((a,x)=>a+lnet(x),0);el.textContent=inr(Math.max(0,rnd(t0)-Math.min(xv(),rnd(t0))-num(pcash)-num(pupi)))}}
+const rnd=v=>S.ro?Math.round(v):Math.round(v*100)/100;
+function rr(){render();const e=$(lf);if(e){e.focus();e.setSelectionRange(e.value.length,e.value.length)}}
+function nextCode(){let m=0;S.p.forEach(p=>{const n=parseInt(p.code)||0;if(n>m)m=n});return String(m+1)}
+function da(x){const g=x.price*x.qty,d=x.dt=='pct'?g*(x.dv||0)/100:(x.dv||0);return Math.min(g,Math.round(d*100)/100)}
+function lnet(x){return x.price*x.qty-da(x)}
+function disc(i){const x=cart[i],hi=S.lang=='hi';modal((hi?'छूट':'Discount')+' - '+x.name,[[0,hi?'छूट की मात्रा (खाली = हटाएँ)':'Discount value (blank = remove)',N+nv(0,x.dv||'')],[1,hi?'प्रकार':'Type',x.dt||'amt',[['amt','₹ (रुपये)'],['pct','% (प्रतिशत)']]]],v=>{x.dv=num(v[0]);x.dt=v[1]},null,true);setTimeout(()=>{const e=$('f0');if(e)e.focus()},60)}
+function addCart(id){const p=S.p.find(x=>x.id==id),u=p.unit||'pc',i=cart.find(x=>x.id==id);
+ if(i&&u=='pc')i.qty++;else if(!i)cart.push({id,name:p.name,price:p.price,cost:p.cost,mrp:p.mrp||0,qty:1,unit:u});q='';cn='';render();
+ if(u!='pc')setQty(cart.findIndex(x=>x.id==id));else{var e=$(lf);if(e)e.focus()}}
+function qty(i,d){const x=cart[i];x.qty=Math.round((x.qty+d*((x.unit||'pc')=='pc'?1:.25))*1000)/1000;if(x.qty<=0)cart.splice(i,1);render()}
+function fq(x){const u=x.unit||'pc';if(u=='pc')return x.qty;const k=Math.floor(x.qty+1e-9),g=Math.round((x.qty-k)*1000);return((k?k+' '+u+' ':'')+(g?g+' '+(u=='kg'?'g':'ml'):'')).trim()||'0'}
+function setQty(i){const x=cart[i],u=x.unit||'pc';
+ if(u=='pc'){modal(t('qty'),[[0,t('qty'),N+'placeholder="'+x.qty+'"']],v=>{x.qty=num(v[0])||x.qty},null,true);setTimeout(()=>{const e=$('f0');if(e)e.focus()},60);return}
+ modal(x.name+' ('+inr(x.price)+'/'+u+')',[[0,u.toUpperCase(),N+'placeholder="0"'],[1,u=='kg'?'Gram (g)':'ml',N+'placeholder="0"']],v=>{const q=Math.round((num(v[0])+num(v[1])/1000)*1000)/1000;if(q>0)x.qty=q;else cart.splice(i,1)},null,true);setTimeout(()=>{const e=$('f0');if(e)e.focus()},60)}
+function bill(){
+ const total=rnd(cart.reduce((a,x)=>a+lnet(x),0)),profit=cart.reduce((a,x)=>a+lnet(x)-x.cost*x.qty,0);
+ const c=S.c.find(x=>x.id==cust),cr=Math.min(xv(),total),due0=Math.round((total-cr)*100)/100;
+ let cash=0,upi=0,credit=0;
+ if(pay=='cash')cash=due0;else if(pay=='upi')upi=due0;
+ else if(pay=='credit'){const pd=Math.min(due0,num(paidAmt));cash=pd;credit=Math.round((due0-pd)*100)/100}
+ else{cash=num(pcash);upi=num(pupi);credit=Math.round((due0-cash-upi)*100)/100;if(credit<0){toast(S.lang=='hi'?'कैश + UPI कुल से ज़्यादा है':'Cash + UPI is more than total');return}}
+ if(credit>0&&!c){toast(S.lang=='hi'?'उधार के लिए ग्राहक चुनें':'Select a customer for credit');return}
+ if(c&&credit>0)c.due+=credit;
+ cart.forEach(x=>{const p=S.p.find(p=>p.id==x.id);p.stock=Math.round((p.stock-x.qty)*1000)/1000});
+  const no=S.n++;{const n0=S.cn.find(z=>z.id==apCn);if(n0){n0.rem=Math.round((n0.rem-cr)*100)/100;if(n0.rem<=0.001)n0.rem=0}apCn=''}S.s.push({no,ts:Date.now(),total,profit,pay,xc:cr,due:credit,pays:{cash,upi,credit},sav:Math.round(cart.reduce((a,x)=>a+(x.mrp>x.price?(x.mrp-x.price)*x.qty:0)+da(x),0)*100)/100,items:cart.map(x=>({n:x.name,q:x.qty,p:x.price,u:x.unit,m:x.mrp,id:x.id,c:x.cost,d:da(x)})),cust:c?c.name:'',mob:c?c.mob:''});
+ cart=[];cust='';paidAmt='';pcash='';pupi='';q='';cn='';save();render();if(upi>0)showQR(no,upi);else showBill(no)}
+function line(a,b,w){a=String(a);b=String(b);return a.slice(0,Math.max(1,w-b.length-1)).padEnd(w-b.length)+b}
+function toast(m){const d=document.createElement('div');d.textContent=m;d.style.cssText='position:fixed;left:16px;right:16px;bottom:90px;background:#222;color:#fff;padding:14px;border-radius:14px;z-index:99;text-align:center;font-weight:600';document.body.appendChild(d);setTimeout(()=>d.remove(),2800)}
+function ask(msg,yes){const m=document.createElement('div');m.className='mod';m.innerHTML=`<div><h2>${esc(msg)}</h2><div class="g2"><button class="s" id="an">${t('cancel')}</button><button class="d" id="ay">${S.lang=='hi'?'हाँ':'Yes'}</button></div></div>`;document.body.appendChild(m);$('an').onclick=()=>m.remove();$('ay').onclick=()=>{m.remove();yes()}}
+function lastSup(p){for(let i=S.pu.length-1;i>=0;i--){const u=S.pu[i];if(u.pid==p.id||(!u.pid&&u.pn==p.name))return u.sn}return''}
+function histS(id){const s0=S.sup.find(x=>x.id==id),hi=S.lang=='hi',D=x=>new Date(x.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),ML=k=>k=='dues'?(hi?'उधार':'Dues'):k=='upi'?'UPI':k=='bank'?(hi?'बैंक':'Bank'):t('cash');
+ const L=[...S.pu.filter(x=>x.sid==id).map(x=>({...x,k:'b'})),...S.sp.filter(x=>x.sid==id).map(x=>({...x,k:'p'})),...S.rt.filter(x=>x.k=='s'&&x.sid==id).map(x=>({...x,k:'r'}))].sort((a,b)=>b.ts-a.ts),m=document.createElement('div');m.className='mod';
+ m.innerHTML=`<div><h2>🏭 ${esc(s0.name)}</h2><div class="mu">${t('payable')}: <b>${inr(s0.due)}</b></div>${L.length?L.map(x=>x.k=='r'?`<div class="row"><span>↩️ ${x.items.map(i=>esc(i.n)+' ×'+i.q).join(', ')}<br><span class="mu">${D(x)} ${modeL(x.mode)}</span></span><b style="color:var(--pr)">−${inr(x.amt)}</b></div>`:x.k=='p'?`<div class="row"><span>💸 ${hi?'भुगतान':'Payment'} · ${ML(x.mode)}<br><span class="mu">${D(x)} ${esc(x.note||'')}</span></span><b style="color:var(--pr)">−${inr(x.amt)}</b></div>`:`<div class="row"><span>${esc(x.pn)} <b>${x.q}${x.u&&x.u!='pc'?' '+x.u:''}</b> × ${inr(x.c)}<br><span class="mu">${D(x)} ${esc(x.inv||'')}</span></span><span style="text-align:right"><b>${inr(x.total)}</b><br><span class="mu">${hi?'दिया':'paid'} ${inr(x.paid)}${x.mode=='split'&&x.pays?' ('+t('cash')+' '+inr(x.pays.cash)+' + UPI '+inr(x.pays.upi)+')':x.mode=='dues'?' ('+ML('dues')+')':x.paid?' ('+ML(x.mode||'cash')+')':''}</span></span></div>`).join(''):`<div class="mu">${t('none')}</div>`}<button class="s" id="mc" style="width:100%;margin-top:10px">OK</button></div>`;
+ document.body.appendChild(m);$('mc').onclick=()=>m.remove()}
+const QS=[['अपना पहला स्कूल कौन सा था?','Which was your first school?'],['आपके गाँव/शहर का नाम?','Your village/city name?'],['आपकी माँ का नाम?',"Your mother's name?"],['आपकी पहली दुकान का नाम?','Your first shop name?']];
+async function H(x){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('kh:'+x));return[...new Uint8Array(b)].map(v=>v.toString(16).padStart(2,'0')).join('')}catch(e){return hp('kh:'+x)}}
+function keep(){['am','ap','ap2','aa','aq'].forEach(i=>{const e=$(i);if(e)av[i]=e.value})}
+function authView(){const hi=S.lang=='hi',L=(a,b)=>hi?a:b,mode=!S.auth?'setup':(am=='forgot'?'forgot':'login'),V=i=>esc(av[i]||'');
+ const pb=`<div class="pay">${[4,6].map(n=>`<button class="${pl_==n?'':'s'}" onclick="keep();pl_=${n};authView()">${n} ${L('अंक का PIN','digit PIN')}</button>`).join('')}</div>`;
+ const mob=`<input id="am" type="tel" inputmode="numeric" maxlength="10" placeholder="${L('मोबाइल नंबर (10 अंक)','Mobile number (10 digits)')}" value="${V('am')}">`;
+ const pin=(id,ph)=>`<input id="${id}" type="password" inputmode="numeric" maxlength="6" placeholder="${ph}" value="${V(id)}">`;
+ const stay=`<label style="display:flex;gap:8px;align-items:center;margin:8px 0"><input id="as" type="checkbox" style="width:auto;margin:0" ${S.stay?'checked':''}> ${L('इस फ़ोन पर लॉगिन याद रखें','Keep me logged in on this phone')}</label>`;
+ let b='';
+ if(mode=='login')b=`<h2>🔐 ${L('लॉग इन','Log in')}</h2>${mob}${pin('ap','PIN')}${stay}<button style="width:100%" onclick="doLogin()">${L('लॉग इन','Log in')}</button><button class="s" style="width:100%;margin-top:8px" onclick="keep();am='forgot';authView()">${L('PIN भूल गए?','Forgot PIN?')}</button>`;
+ else if(mode=='setup')b=`<h2>🆕 ${L('खाता बनाएँ','Create account')}</h2>${mob}${pb}${pin('ap',L('नया PIN','New PIN'))}${pin('ap2',L('PIN दोबारा','Confirm PIN'))}<label class="mu">${L('PIN भूलने पर पहचान का सवाल','Security question (for forgot PIN)')}</label><select id="aq">${QS.map((q,i)=>`<option value="${i}" ${av.aq==i?'selected':''}>${q[hi?0:1]}</option>`).join('')}</select><input id="aa" placeholder="${L('जवाब','Answer')}" value="${V('aa')}">${stay}<button style="width:100%" onclick="doSetup()">${L('खाता बनाएँ','Create account')}</button>`;
+ else b=`<h2>🔑 ${L('PIN रीसेट','Reset PIN')}</h2>${mob}<div class="mu" style="margin-top:6px">${QS[S.auth.q][hi?0:1]}</div><input id="aa" placeholder="${L('जवाब','Answer')}" value="${V('aa')}">${pb}${pin('ap',L('नया PIN','New PIN'))}${pin('ap2',L('PIN दोबारा','Confirm PIN'))}<button style="width:100%" onclick="doReset()">${L('PIN रीसेट करें','Reset PIN')}</button><button class="s" style="width:100%;margin-top:8px" onclick="keep();am='login';authView()">${L('वापस','Back')}</button><button class="d sm" style="width:100%;margin-top:14px" onclick="wipeAll()">${L('जवाब याद नहीं? सारा डेटा मिटाकर नया शुरू करें','Forgot answer? Erase all data & start fresh')}</button>`;
+ $('nav').innerHTML='';$('app').innerHTML=`<div class="hero"><div class="big">${esc(S.shop)}</div><div class="mu">${t('tag')}</div></div><div class="card" style="margin-top:12px">${b}</div>`}
+const dg=v=>String(v).replace(/\D/g,'').slice(-10);
+async function doSetup(){const hi=S.lang=='hi',m=dg($('am').value),p1=$('ap').value,p2=$('ap2').value,an=$('aa').value.trim().toLowerCase();
+ if(m.length!=10){toast(hi?'10 अंक का मोबाइल नंबर डालें':'Enter a 10-digit mobile number');return}
+ if(!new RegExp('^\\d{'+pl_+'}$').test(p1)){toast(hi?pl_+' अंक का PIN डालें':'Enter a '+pl_+'-digit PIN');return}
+ if(p1!==p2){toast(hi?'दोनों PIN बराबर नहीं हैं':'PINs do not match');return}
+ if(!an){toast(hi?'सवाल का जवाब लिखें':'Enter the answer');return}
+ S.auth={mob:m,ph:await H(m+':'+p1),plen:pl_,q:+$('aq').value,ah:await H(m+':'+an)};S.stay=$('as').checked;authed=true;av={};save();render()}
+async function doLogin(){const hi=S.lang=='hi';
+ if(Date.now()<(S.lk||0)){toast(hi?'बहुत ग़लत कोशिशें। थोड़ी देर बाद करें':'Too many wrong tries. Wait a bit');return}
+ const m=dg($('am').value),ph=await H(m+':'+$('ap').value);
+ if(m==S.auth.mob&&ph==S.auth.ph){S.fl=0;S.stay=$('as').checked;authed=true;av={};save();render()}
+ else{S.fl=(S.fl||0)+1;if(S.fl>=5){S.lk=Date.now()+30000;S.fl=0}save();toast(hi?'मोबाइल या PIN गलत है':'Wrong mobile or PIN')}}
+async function doReset(){const hi=S.lang=='hi',m=dg($('am').value),an=$('aa').value.trim().toLowerCase(),p1=$('ap').value,p2=$('ap2').value;
+ if(m!=S.auth.mob||(await H(m+':'+an))!=S.auth.ah){toast(hi?'मोबाइल या जवाब गलत है':'Wrong mobile or answer');return}
+ if(!new RegExp('^\\d{'+pl_+'}$').test(p1)){toast(hi?pl_+' अंक का PIN डालें':'Enter a '+pl_+'-digit PIN');return}
+ if(p1!==p2){toast(hi?'दोनों PIN बराबर नहीं हैं':'PINs do not match');return}
+ S.auth.ph=await H(m+':'+p1);S.auth.plen=pl_;S.fl=0;S.lk=0;save();am='login';av={};toast(hi?'PIN बदल गया। अब लॉग इन करें':'PIN changed. Please log in');authView()}
+function wipeAll(){ask(S.lang=='hi'?'सारा डेटा मिट जाएगा और वापस नहीं आएगा। पक्का?':'All data will be erased permanently. Sure?',()=>{try{localStorage.removeItem('kh')}catch(e){}S={lang:'hi',shop:'Kirana Hub',p:[],c:[],s:[],n:1,sup:[],pu:[],ex:[],sp:[],rt:[],cn:[]};authed=false;am='login';av={};render()})}
+function logout(){ask(S.lang=='hi'?'लॉग आउट करना है?':'Log out?',()=>{authed=false;S.stay=false;am='login';av={};save();render()})}
+async function chgLoginDo(v){const hi=S.lang=='hi';if(await H(S.auth.mob+':'+v[0])!==S.auth.ph){toast(hi?'पुराना PIN गलत है':'Old PIN is wrong');return}
+ if(!/^(\d{4}|\d{6})$/.test(v[1])||v[1]!==v[2]){toast(hi?'नया PIN 4 या 6 अंक का हो और दोनों बराबर हों':'New PIN must be 4 or 6 digits and match');return}
+ S.auth.ph=await H(S.auth.mob+':'+v[1]);S.auth.plen=v[1].length;save();toast(hi?'PIN बदल गया':'PIN changed')}
+function chgLogin(){const hi=S.lang=='hi';modal(hi?'लॉगिन PIN बदलें':'Change login PIN',[[0,hi?'पुराना PIN':'Old PIN',PA],[1,hi?'नया PIN (4 या 6 अंक)':'New PIN (4 or 6 digits)',PA],[2,hi?'नया PIN दोबारा':'Confirm new PIN',PA]],chgLoginDo)}
+
+const hp=z=>{let x=5381;for(const c of z)x=(x*33^c.charCodeAt(0))>>>0;return String(x)},PA='type=password inputmode=numeric maxlength=6';
+function setPin(cb){modal(S.lang=='hi'?'नया PIN बनाएँ (4-6 अंक)':'Create PIN (4-6 digits)',[[0,'PIN',PA],[1,S.lang=='hi'?'PIN दोबारा':'Confirm PIN',PA]],v=>{if(v[0].length<4||v[0]!=v[1]){toast(S.lang=='hi'?'PIN कम से कम 4 अंक का और दोनों बराबर हों':'PIN must be 4+ digits and match');setPin(cb);return}S.pin=hp(v[0]);if(cb)cb()})}
+function askPin(cb){if(!S.pin){setPin(cb);return}modal(S.lang=='hi'?'हटाने के लिए PIN डालें':'Enter PIN',[[0,'PIN',PA]],v=>{if(hp(v[0])===S.pin)cb();else toast(S.lang=='hi'?'गलत PIN':'Wrong PIN')})}
+function changePin(){if(S.pin)askPin(()=>setPin());else setPin()}
+function prodOf(i){return S.p.find(o=>o.id==i.id)||S.p.find(o=>o.name==i.n)}
+function costOf(i){if(i.c!=null)return i.c;const p=prodOf(i);return p?p.cost:i.p}
+function custOf(x){return S.c.find(o=>o.name==x.cust)}
+function unbill(x){x.items.forEach(i=>{const p=prodOf(i);if(p)p.stock=Math.round((p.stock+i.q)*1000)/1000});const c=custOf(x);if(c&&x.due>0)c.due=Math.max(0,c.due-x.due)}
+function editBill(no){const x=S.s.find(y=>y.no==no),f=[];
+ x.items.forEach((i,k)=>{f.push([2*k,i.n+' - '+t('qty'),N+nv(0,i.q)]);f.push([2*k+1,i.n+' - '+t('price'),N+nv(0,i.p)])});
+ modal('#'+no+' '+(S.lang=='hi'?'बिल सुधारें (मात्रा 0 = हटाएँ)':'Edit bill (qty 0 = remove)'),f,v=>{
+  if(v.filter((_,k)=>k%2==0).every(a=>!num(a))){askPin(()=>{unbill(x);S.s=S.s.filter(y=>y!==x)});return}
+  const old=x.total,od=x.due||0;
+  x.items.forEach((i,k)=>{const p=prodOf(i),nq=num(v[2*k]);i.c=costOf(i);if(p)p.stock=Math.round((p.stock+i.q-nq)*1000)/1000;i.d=Math.round((i.d||0)*nq/i.q*100)/100;i.q=nq;i.p=num(v[2*k+1])});
+  x.items=x.items.filter(i=>i.q>0);
+  if(!x.items.length){const c=custOf(x);if(c&&od>0)c.due=Math.max(0,c.due-od);S.s=S.s.filter(y=>y!==x);return}
+  x.total=rnd(x.items.reduce((a,i)=>a+i.p*i.q-(i.d||0),0));
+  x.profit=x.items.reduce((a,i)=>a+i.p*i.q-(i.d||0)-i.c*i.q,0);
+  x.sav=Math.round(x.items.reduce((a,i)=>a+(i.m>i.p?(i.m-i.p)*i.q:0)+(i.d||0),0)*100)/100;
+  if(od>0){const nd=Math.max(0,od+x.total-old),c=custOf(x);if(c)c.due=Math.max(0,c.due+nd-od);x.due=nd}
+ },()=>{unbill(x);S.s=S.s.filter(y=>y!==x)})}
+function setUpi(){modal('UPI ID',[[0,'UPI ID','placeholder="name@bank" '+nv(0,S.upi||'')]],v=>{S.upi=v[0]})}
+function showQR(no,amt){const hi=S.lang=='hi';
+ if(!S.upi){toast(hi?'पहले More में अपनी UPI ID डालें':'First add your UPI ID in More');showBill(no);return}
+ const url='upi://pay?pa='+encodeURIComponent(S.upi)+'&pn='+encodeURIComponent(S.shop)+'&am='+Number(amt).toFixed(2)+'&cu=INR&tn='+encodeURIComponent('Bill '+no),m=document.createElement('div');m.className='mod';
+ m.innerHTML=`<div style="text-align:center"><h2>📲 UPI ${inr(amt)}</h2><div class="mu">${esc(S.shop)} · ${esc(S.upi)}</div><div id="qr" style="background:#fff;padding:12px;border-radius:14px;display:inline-block;margin:12px 0"></div><div class="g2"><button class="s" id="qc">${hi?'बाद में':'Later'}</button><button id="qo">${hi?'पैसे मिल गए ✓':'Received ✓'}</button></div></div>`;
+ document.body.appendChild(m);
+ try{new QRCode($('qr'),{text:url,width:220,height:220,correctLevel:QRCode.CorrectLevel.M})}catch(e){$('qr').innerHTML='<a href="'+url+'">'+(hi?'UPI ऐप खोलें':'Open UPI app')+'</a>'}
+ $('qc').onclick=$('qo').onclick=()=>{m.remove();showBill(no)}}
+function mid(a,b,w){a=String(a);b=String(b);const l=' '.repeat(Math.max(0,(w-a.length)>>1))+a;return l.length+b.length<w?l.padEnd(w-b.length)+b:line(a,b,w)}
+function rtext(x){const w=S.pw==80?48:32,r='-'.repeat(w),ctr=z=>' '.repeat(Math.max(0,(w-z.length)>>1))+z;
+ let o=ctr(S.shop)+'\n'+ctr('Bill #'+x.no)+'\n'+ctr(new Date(x.ts).toLocaleString('en-IN'))+'\n'+(x.cust?'Customer: '+x.cust+'\n':'')+r+'\n';
+ x.items.forEach(i=>{o+=line(i.n,Math.round((i.q*i.p-(i.d||0))*100)/100,w)+'\n'+ctr(i.q+(i.u&&i.u!='pc'?i.u:'')+' x '+i.p)+'\n'+(i.d>0?ctr('Discount -'+i.d)+'\n':'')+(i.m>i.p?'  MRP '+i.m+' -> '+i.p+' (save '+Math.round((i.m-i.p)*i.q*100)/100+')\n':'')});
+ o+=r+'\n'+line('TOTAL',x.total,w)+'\n'+(x.xc>0?line('RETURN CREDIT','-'+x.xc,w)+'\n'+line('TO PAY',Math.round((x.total-x.xc)*100)/100,w)+'\n':'')+line('Payment',x.pay.toUpperCase(),w)+'\n';if(x.pay=='split'&&x.pays){if(x.pays.cash)o+=line(' Cash',x.pays.cash,w)+'\n';if(x.pays.upi)o+=line(' UPI',x.pays.upi,w)+'\n'}if(x.sav>0)o+=line('YOU SAVED',x.sav,w)+'\n';
+ if(x.due>0)o+=line('DUE',x.due,w)+'\n';
+ return o+r+'\n'+ctr('Thank you! Visit again')+'\n\n\n'}
+function showBill(no){const x=S.s.find(y=>y.no==no),txt=rtext(x),m=document.createElement('div');m.className='mod';
+ m.innerHTML=`<div><h2>✅ #${no}</h2><pre style="white-space:pre-wrap;font:13px monospace;overflow:auto">${esc(txt)}</pre><div class="g2"><button id="pb">🖨️ Print</button><button class="s" id="rb">RawBT</button></div><div class="g2" style="margin-top:8px"><button class="s" id="wb">WhatsApp</button><button class="s" id="mc">OK</button></div>${x.pays&&x.pays.upi>0?`<button class="s" id="qb" style="width:100%;margin-top:8px">📲 UPI QR</button>`:''}<div class="g2" style="margin-top:8px"><button class="s" id="eb">✏️ ${S.lang=='hi'?'बिल सुधारें':'Edit bill'}</button><button class="d" id="db">🗑️ ${S.lang=='hi'?'हटाएँ':'Delete'}</button></div></div>`;
+ document.body.appendChild(m);$('mc').onclick=()=>m.remove();
+ if($('qb'))$('qb').onclick=()=>{m.remove();showQR(no,x.pays.upi)};$('eb').onclick=()=>{m.remove();editBill(no)};$('db').onclick=()=>{m.remove();ask(S.lang=='hi'?'पूरा बिल हटाना है?':'Delete this bill?',()=>askPin(()=>{unbill(x);S.s=S.s.filter(y=>y!==x)}))};$('pb').onclick=()=>{$('rcp').textContent=txt;document.documentElement.style.setProperty('--pw',(S.pw==80?72:48)+'mm');window.print()};
+ $('rb').onclick=()=>{location.href='intent:base64,'+btoa(unescape(encodeURIComponent(txt)))+'#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;end;'};
+ $('wb').onclick=()=>window.open('https://wa.me/'+(x.mob?'91'+x.mob.replace(/\D/g,'').slice(-10):'')+'?text='+encodeURIComponent(txt))}
+function backup(){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='kirana-hub-backup.json';a.click()}catch(e){toast(JSON.stringify(S))}}
+function restore(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{S=JSON.parse(r.result);['sup','pu','ex','sp','rt','cn'].forEach(k=>S[k]=S[k]||[]);save();render()}catch(e){toast('Invalid file')}};r.readAsText(f)}
+if(window.visualViewport){const f=()=>{const kb=Math.max(0,window.innerHeight-visualViewport.height-visualViewport.offsetTop);document.documentElement.style.setProperty('--kb',kb+'px')};visualViewport.addEventListener('resize',f);visualViewport.addEventListener('scroll',f);f()}
+document.addEventListener('focusin',e=>{const t0=e.target;if(t0&&t0.closest&&t0.closest('.mod'))setTimeout(()=>{try{t0.scrollIntoView({block:'nearest'})}catch(x){}},300)});
+render();
+</script><script>if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script></body></html>
